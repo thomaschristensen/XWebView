@@ -110,8 +110,12 @@ public func jsonify(_ value: Any?) -> String? {
         return o.jsonString
     case let d as Data:
         return d.withUnsafeBytes {
-            (base: UnsafePointer<UInt8>) -> String? in
-            jsonify(UnsafeBufferPointer<UInt8>(start: base, count: d.count))
+            (base: UnsafeRawBufferPointer) -> String? in
+            guard let baseAddress = base.baseAddress, base.count > 0 else {
+              fatalError("rawPointer no baseAddress")
+            }
+            let bytes = baseAddress.assumingMemoryBound(to: UInt8.self)
+            return jsonify(UnsafeBufferPointer<UInt8>(start: bytes, count: d.count))
         }
     default:
         let mirror = Mirror(reflecting: value)
@@ -129,7 +133,9 @@ public func jsonify(_ value: Any?) -> String? {
             #endif
         case .enum:
             return jsonify(String(describing: value))
-        }
+        @unknown default:
+          fatalError("\(value) can't recognized.")
+      }
     }
 }
 private func jsonify(_ child: Mirror.Child) -> String? {

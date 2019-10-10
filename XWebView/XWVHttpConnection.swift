@@ -104,8 +104,13 @@ extension XWVHttpConnection : StreamDelegate {
         case Stream.Event.hasBytesAvailable:
             let count = inputBuffer.count
             let bytesReaded = inputBuffer.withUnsafeMutableBytes {
-                (base: UnsafeMutablePointer<UInt8>) -> Int in
-                input.read(base.advanced(by: cursor), maxLength: count - cursor)
+                (base: UnsafeMutableRawBufferPointer) -> Int in
+              
+              guard let baseAddress = base.baseAddress, base.count > 0 else {
+                fatalError("rawPointer no baseAddress")
+              }
+              let bytes = baseAddress.assumingMemoryBound(to: UInt8.self)
+              return input.read(bytes.advanced(by: cursor), maxLength: count - cursor)
             }
             guard bytesReaded > 0 else { break }
             cursor += bytesReaded
@@ -158,8 +163,12 @@ extension XWVHttpConnection : StreamDelegate {
                     }
                 }
                 bytesSent = outputBuffer.withUnsafeBytes{
-                    (ptr: UnsafePointer<UInt8>) -> Int in
-                    output.write(ptr.advanced(by: off), maxLength: outputBuffer.count - off)
+                    (base: UnsafeRawBufferPointer) -> Int in
+                    guard let baseAddress = base.baseAddress, base.count > 0 else {
+                      fatalError("rawPointer no baseAddress")
+                    }
+                    let bytes = baseAddress.assumingMemoryBound(to: UInt8.self)
+                    return output.write(bytes.advanced(by: off), maxLength: outputBuffer.count - off)
                 }
                 bytesRemained -= bytesSent
             } while bytesRemained > 0 && output.hasSpaceAvailable && bytesSent > 0
@@ -224,7 +233,7 @@ private extension URLRequest {
         case Trace   = "TRACE"
     }
     private static var CRLF: Data {
-        return Data(bytes: [0x0d, 0x0a])
+        return Data([0x0d, 0x0a])
     }
 
     init?(data: Data) {
@@ -255,7 +264,7 @@ private extension URLRequest {
             }
 
             // parse header field
-            guard let colon = line.index(of: ":") else { return nil }
+            guard let colon = line.firstIndex(of: ":") else { return nil }
             let name = String(line.prefix(upTo: colon))
             var value = String(line.suffix(from: line.index(after: colon)))
             value.trim { $0 == " " || $0 == "\t" }

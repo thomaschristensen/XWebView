@@ -40,7 +40,7 @@ public class XWVLogging : XWVScripting {
             "\0", "\0", "$", "!", "?", "-", "+", " "
         ]
         fileprivate init?(symbol: Character) {
-            guard symbol != "\0", let value = Level.symbols.index(of: symbol) else {
+            guard symbol != "\0", let value = Level.symbols.firstIndex  (of: symbol) else {
                 return nil
             }
             self = Level(rawValue: Int32(value))!
@@ -132,5 +132,5 @@ func log(_ message: String, level: XWVLogging.Level? = nil) {
 
 func die(_ message: @autoclosure ()->String, file: StaticString = #file, line: UInt = #line) -> Never  {
     logger.log(message(), level: .Alert)
-    fatalError(message, file: file, line: line)
+    fatalError(message(), file: file, line: line)
 }

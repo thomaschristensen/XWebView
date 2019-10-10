@@ -289,7 +289,7 @@ public class XWVInvocation {
     public subscript (selector: Selector) -> (Any?...)->Any {
         return {
             (args: Any?...)->Any in
-            self.call(selector, with: args)
+            self.call(selector, with: args) as Any
         }
     }
 }
