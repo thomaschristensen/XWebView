@@ -58,7 +58,7 @@ public class XWVObject : NSObject {
         let script: String
         if origin === self {
             script = "delete \(namespace)"
-        } else if reference != 0, let origin = origin {
+        } else if reference > 1, let origin = origin {
             script = "\(origin.namespace).$releaseObject(\(reference))"
         } else {
             return
