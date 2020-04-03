@@ -10,7 +10,7 @@ Plugins written in Objective-C or Swift programming language can be automaticall
 
 ## Sample Project
 
-For a complete example on how to use XWebView including both Swift and JavaScript code, see the [Sample Project](https://github.com/XWebView/Sample).
+For a complete example on how to use XWebView including both Swift and JavaScript code, see the [Sample Project](https://github.com/thomaschristensen/Sample).
 
 ## Features
 
@@ -25,8 +25,6 @@ Besides mapping to an ordinary JavaScript object, a plugin object can also be ma
 Further more, JavaScript constructor is also supported. A plugin can have multiple instances. In this case, an initializer is mapped to the function of constructor. Meanwhile, principal object of the plugin is created as the prototype of constructor. Each instance has a pair of native and JavaScript object which share the same life cycle and states.
 
 XWebView is designed for embedding. It's easy to adopt since it's an extension of WKWebView class. Basically, creating and loading plugin objects are the only additional steps you need to handle. Additionally, XWebView offers 2 threading modes for plugin: Grand Central Dispatch(GCD) and NSThread.
-
-For more documents, please go to the project [Wiki](../../wiki).
 
 ## Minimum Requirements:
 
