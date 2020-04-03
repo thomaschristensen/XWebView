@@ -1,6 +1,6 @@
 # XWebView - eXtensible WebView for iOS
 
-[![Build Status](https://travis-ci.org/XWebView/XWebView.svg?branch=master)](https://travis-ci.org/XWebView/XWebView)
+![Swift](https://github.com/thomaschristensen/XWebView/workflows/Swift/badge.svg)
 
 ## Introduction
 
